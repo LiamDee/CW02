@@ -15,9 +15,8 @@ node {
         }
     }
 
-    stage('Push image') {
-	sh 'sudo docker login'
-        docker.withRegistry('https://index.docker.io/v1/', 'docker-hub-credentials') {
+    stage('push image') {
+        docker.withRegistry('https://registry.hub.docker.com', 'docker-hub-credentials') {
             app.push("${env.BUILD_NUMBER}")
             app.push("latest")
         }
