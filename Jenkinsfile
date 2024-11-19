@@ -16,7 +16,7 @@ node {
     }
 
     stage('Push image') {
-	sh 'docker login'
+	sh 'sudo docker login'
         docker.withRegistry('https://index.docker.io/v1/', 'docker-hub-credentials') {
             app.push("${env.BUILD_NUMBER}")
             app.push("latest")
