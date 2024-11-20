@@ -1,24 +1,39 @@
-node {
-    def app
+pipeline {
+	agent any
+	environment {
+		DOCKERHUB_CREDDENTIALS = credentials('docker')
+	}
 
-    stage('clone repo') {
-        checkout scm
-    }
+	stages('Build Image') {
+		steps {
+			sh 'docker image build --tag liamdee/cw2-server:1.0 .'
+		}
+	}
 
-    stage('build image') {
-        app = docker.build("liamdee/cw2-server")
-    }
+	stage('Testing Image') {
+		steps {
+			sh 'docker inspect -f . liamdee/cw2-server:1.0'
+			sh 'echo "Tests successful"'
+		}
+	}
 
-    stage('testing') {
-        app.inside {
-            sh 'echo "Tests passed"'
-        }
-    }
+	stage('Log into DockerHub') {
+		steps {
+			sh 'echo $DOCKERHUB_CREDENTIALS_PW | docker login -u $DOCKERHUB_CREDENTIALS_USR --password-stdin'
+		}
+	}
 
-    stage('push image') {
-        docker.withRegistry('https://registry.hub.docker.com', 'docker-hub-credentials') {
-            app.push("${env.BUILD_NUMBER}")
-            app.push("latest")
-        }
-    }
+	stage('Push to DockerHub') {
+		steps {
+			sh ' docker image push liamdee/cw2-server:1.0'
+		}
+	}
+
+//	stage('Deploy to Kubernetes') {
+//		steps {
+//			sshagent(['jenkins-k8s-ssh-key']) {
+//				sh ''
+//			}
+//		}
+//	}
 }
