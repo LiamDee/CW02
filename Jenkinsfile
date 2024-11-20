@@ -1,7 +1,7 @@
 pipeline {
 	agent any
 	environment {
-		DOCKERHUB_CREDDENTIALS = credentials('docker')
+		DOCKERHUB_CREDS = credentials('docker')
 	}
 
     stages {
@@ -14,14 +14,14 @@ pipeline {
 
         stage('Testing Image') {
             steps {
-                sh 'docker inspect -f . liamdee/cw2-server:1.0'
+                sh 'docker image inspect liamdee/cw2-server:1.0'
                 sh 'echo "Tests successful"'
             }
         }
 
         stage('Log into DockerHub') {
             steps {
-                sh 'echo $DOCKERHUB_CREDENTIALS_PW | docker login -u $DOCKERHUB_CREDENTIALS_USR --password-stdin'
+                sh 'echo $DOCKERHUB_CREDS_PSW | docker login -u $DOCKERHUB_CREDS_USR --password-stdin'
             }
         }
 
