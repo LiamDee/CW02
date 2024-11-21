@@ -31,12 +31,16 @@ pipeline {
             }
         }
 
-    //	stage('Deploy to Kubernetes') {
-    //		steps {
-    //			sshagent(['jenkins-k8s-ssh-key']) {
-    //				sh ''
-    //			}
-    //		}
-    //	}
+	stage('Deploy to Kubernetes') {
+		steps {
+			sshagent(['jenkins-k8s-ssh-key']) {
+				sh ''
+                    script {
+                        sh "ssh ${env.SSH_HOST} 'kubectl create deployment cw2-server --image=liamdee/cw2-server:1.0'"
+                        sh "ssh ${env.SSH_HOST} 'kubectl expose deployment/cw2-server --type='NodePort' --port 8080 --name node-port-service'"
+                    }
+			}
+		}
+	}
     }
 }
