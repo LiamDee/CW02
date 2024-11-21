@@ -1,7 +1,7 @@
-FROM node:6.14.2
+FROM node:12.18.1
 
 COPY server.js .
 
 EXPOSE 8080 443
 
-CMD node server.js
+CMD ["node", "server.js"]
