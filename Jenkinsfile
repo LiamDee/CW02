@@ -36,8 +36,8 @@ pipeline {
 			sshagent(['jenkins-k8s-ssh-key']) {
 				sh ''
                     script {
-                        sh "ssh ${env.SSH_HOST} 'kubectl create deployment cw2-server --image=liamdee/cw2-server:1.0'"
-                        sh "ssh ${env.SSH_HOST} 'kubectl expose deployment/cw2-server --type='NodePort' --port 8080 --name node-port-service'"
+                        sh "ssh jenkins@ip-172-31-20-71 'kubectl create deployment cw2-server --image=liamdee/cw2-server:1.0'"
+                        sh "ssh jenkins@ip-172-31-20-71 'kubectl expose deployment/cw2-server --type='NodePort' --port 8080 --name node-port-service'"
                     }
 			}
 		}
