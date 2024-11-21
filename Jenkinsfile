@@ -8,13 +8,13 @@ pipeline {
         
         stage('Build Image') {
             steps {
-                sh 'docker image build --tag liamdee/cw2-server:1.0 .'
+                sh 'docker image build --tag liamdee/cw2-server:2.0 .'
             }
         }
 
         stage('Testing Image') {
             steps {
-                sh 'docker image inspect liamdee/cw2-server:1.0'
+                sh 'docker image inspect liamdee/cw2-server:2.0'
                 sh 'echo "Tests successful"'
             }
         }
@@ -27,7 +27,7 @@ pipeline {
 
         stage('Push to DockerHub') {
             steps {
-                sh ' docker image push liamdee/cw2-server:1.0'
+                sh ' docker image push liamdee/cw2-server:2.0'
             }
         }
 
@@ -36,7 +36,7 @@ pipeline {
 			sshagent(['jenkins-k8s-ssh-key']) {
 				sh ''
                     script {
-                        sh "ssh -o StrictHostKeyChecking=no ubuntu@ip-172-31-21-73  'kubectl set image deployments/cw2-server cw2-server=liamdee/cw2-server:1.0'"
+                        sh "ssh -o StrictHostKeyChecking=no ubuntu@ip-172-31-21-73 'kubectl set image deployments/cw2-server cw2-server=liamdee/cw2-server:2.0'"
                     }
 			}
 		}
